@@ -18,6 +18,7 @@ const verifyToken = require("../middleware/verifyToken");
 const isStoryOwner = require("../middleware/isStoryOwner");
 const chapterModels = require("../models/chapter.models");
 const storyModels = require("../models/story.models");
+const { voteChapter } = require("../controllers/")
 const router = require("express").Router();
 
 router.param("story", async(req, res, next, id) => {
