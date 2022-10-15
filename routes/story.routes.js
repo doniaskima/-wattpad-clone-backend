@@ -1,0 +1,56 @@
+const {
+    getStoryChapters,
+    getChapter,
+    createChapter,
+    deleteChapter,
+    updateChapter,
+} = require("../controllers/chapter.controllers");
+
+
+const {
+    getStory,
+    getStories,
+    createStory,
+    updateStory,
+    deleteStory,
+} = require("../controllers/story.controllers");
+const verifyToken = require("../middleware/verifyToken");
+const isStoryOwner = require("../middleware/isStoryOwner");
+const chapterModels = require("../models/chapter.models");
+const storyModels = require("../models/story.models");
+const router = require("express").Router();
+
+router.param("story", async(req, res, next, id) => {
+    try {
+        const story = awaitstoryModels.findById(id);
+        if (!story) {
+            return res.status(404).json("story not found");
+        }
+        req.story = story;
+        next();
+    } catch (err) {
+        return res.status(500).status.json(err);
+    }
+})
+
+router.param("chapter", async(req, res, next, id) => {
+    try {
+        const chapter = await chapterModels.findById(id);
+        if (!chapter) {
+            return res.status(404).json("chapter not found");
+        }
+        req.chapter = chapter;
+        next();
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+
+router.post("/", verifyToken, createStory);
+router.put("/:story", verifyToken, isStoryOwner, updateStory);
+router.delete("/:story", verifyToken, isStoryOwner, deleteStory);
+router.get("/", getStories);
+router.get("/:story", getStory);
+
+module.exports = router;
