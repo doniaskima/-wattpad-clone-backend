@@ -18,3 +18,19 @@ const voteChapter = async(req, res) => {
         return res.status(500).json(err);
     }
 };
+
+const unvoteChapter = async(req, res) => {
+    const chapter = req.chapter;
+    try {
+        await voteModels.findOneAndDelete({
+            chapter: chapter._id,
+            voter: req.verifiedUser._id,
+        });
+        return res.status(204).json();
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+}
+
+module.exports.voteChapter = voteChapter;
+module.exports.unvoteChapter = unvoteChapter;
