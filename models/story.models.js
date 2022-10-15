@@ -22,4 +22,18 @@ const StorySchema = new mongoose.Schema({
     isCompleted: { type: Boolean, default: false },
 }, { timestamps: true });
 
+
+
+StorySchema.pre("validate", function(next) {
+    if (!this.slug) {
+        this.slugify(this.title)
+    }
+    next();
+});
+
+StorySchema.methods.slugify = function(text) {
+    this.slug = slug(text) + "-" + ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
+};
+
+
 module.exports = mongoose.model("Story", StorySchema, "Story");
