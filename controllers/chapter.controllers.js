@@ -1,6 +1,5 @@
 const chapterModel = require("../models/chapter.models");
 const readModels = require("../models/read.models");
-
 const createChapter = async(req, res) => {
     const newChapter = new chapterModel({
         title: req.body.title,
@@ -31,12 +30,12 @@ const getChapter = async(req, res) => {
         const readExist = await readModels.findOne({
             chapter: chapter._id,
             reader: req.verifiedUser._id,
-        })
+        });
         if (!readExist) {
             const newRead = new readModels({
                 chapter: chapter._id,
                 reader: req.verifiedUser._id,
-            })
+            });
             await newRead.save();
         }
         const chap = await chapterModel.aggregate([

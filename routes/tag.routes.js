@@ -5,7 +5,6 @@ const {
     deleteTag,
     updateTag,
 } = require("../controllers/tag.controllers");
-
 const isAdmin = require("../middleware/isAdmin");
 const verifyToken = require("../middleware/verifyToken");
 const tagModels = require("../models/tag.models");

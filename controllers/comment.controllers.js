@@ -1,9 +1,8 @@
 const commentModels = require("../models/comment.models");
-
 const createComment = async(req, res) => {
     const chapter = req.chapter;
     try {
-        const newComment = newCommentModels({
+        const newComment = new commentModels({
             chapter: chapter._id,
             author: req.verifiedUser._id,
             content: req.body.content,
@@ -14,7 +13,6 @@ const createComment = async(req, res) => {
     } catch (err) {
         return res.status(500).json(err);
     }
-}
-
+};
 
 module.exports.createComment = createComment;
