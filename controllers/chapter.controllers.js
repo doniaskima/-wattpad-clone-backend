@@ -1,4 +1,5 @@
 const chapterModel = require("../models/chapter.models");
+const readModels = require("../models/read.models");
 
 const createChapter = async(req, res) => {
     const newChapter = new chapterModel({
@@ -27,7 +28,52 @@ const getStoryChapters = async(req, res) => {
 const getChapter = async(req, res) => {
     const chapter = req.chapter;
     try {
-        return res.status(200).json(chapter);
+        const readExist = await readModels.findOne({
+            chapter: chapter._id,
+            reader: req.verifiedUser._id,
+        })
+        if (!readExist) {
+            const newRead = new readModels({
+                chapter: chapter._id,
+                reader: req.verifiedUser._id,
+            })
+            await newRead.save();
+        }
+        const chap = await chapterModel.aggregate([
+            { $match: { _id: req.chapter._id } },
+            {
+                $lookup: {
+                    from: "Vote",
+                    localField: "_id",
+                    foreignField: "chapter",
+                    as: "votes",
+                },
+            },
+            {
+                $lookup: {
+                    from: "Read",
+                    localField: "_id",
+                    foreignField: "chapter",
+                    as: "reads",
+                },
+            },
+            {
+                $lookup: {
+                    from: "Comment",
+                    localField: "_id",
+                    foreignField: "chapter",
+                    as: "comments",
+                },
+            },
+            {
+                $addFields: {
+                    reads: { $size: "$reads" },
+                    votes: { $size: "$votes" },
+                    comments: { $size: "$comments" },
+                },
+            },
+        ]);
+        return res.status(200).json(chap[0]);
     } catch (err) {
         return res.status(500).json(err);
     }
