@@ -44,6 +44,7 @@ const getChapter = async(req, res) => {
                 $lookup: {
                     from: "Vote",
                     localField: "_id",
+                    foreignField: "chapter",
                 }
             }
         ])
