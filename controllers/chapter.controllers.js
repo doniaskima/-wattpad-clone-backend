@@ -64,6 +64,9 @@ const getChapter = async(req, res) => {
                     as: "comments",
                 },
             },
+            ...(req.verifiedUser ? [
+
+            ])
         ])
     } catch (err) {
         return res.status(500).json(err);
