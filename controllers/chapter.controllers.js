@@ -38,6 +38,9 @@ const getChapter = async(req, res) => {
             });
             await newRead.save();
         }
+        const chap = await chapterModel.aggregate([
+            { $match: { _id: req.chapter._id } }
+        ])
     } catch (err) {
         return res.status(500).json(err);
     }
