@@ -110,7 +110,7 @@ const getChapter = async(req, res) => {
                 { $unset: "voters" },
             ] : []),
         ]);
-
+        return res.status(200).json(chap[0]);
     } catch (err) {
         return res.status(500).json(err);
     }
