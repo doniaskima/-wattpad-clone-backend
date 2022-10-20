@@ -26,6 +26,21 @@ const getStoryChapters = async(req, res) => {
 
 const getChapter = async(req, res) => {
     const chapter = req.chapter;
+    try {
+        const readExist = await readModels.findOne({
+            chapter: chapter._id,
+            reader: req.verifiedUser._id,
+        })
+        if (!readExist) {
+            const newRead = new readModels({
+                chapter: chapter._id,
+                reader: req.verifiedUser._id,
+            });
+            await newRead.save();
+        }
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 }
 
 
