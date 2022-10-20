@@ -1,5 +1,6 @@
 const chapterModel = require("../models/chapter.models");
 const readModels = require("../models/read.models");
+
 const createChapter = async(req, res) => {
     const newChapter = new chapterModel({
         title: req.body.title,
