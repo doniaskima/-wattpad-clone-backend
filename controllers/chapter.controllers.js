@@ -23,7 +23,6 @@ const getStoryChapters = async(req, res) => {
         return res.status(500).json(err);
     }
 };
-
 const getChapter = async(req, res) => {
     const chapter = req.chapter;
     try {
@@ -64,13 +63,53 @@ const getChapter = async(req, res) => {
                     as: "comments",
                 },
             },
-            {
-                $addFields: {
-                    reads: { $size: "$reads" },
-                    votes: { $size: "$votes" },
-                    comments: { $size: "$comments" },
-                },
-            },
+            ...(req.verifiedUser ?
+                [{
+                        $lookup: {
+                            from: "Vote",
+                            let: {
+                                chapterId: "$_id",
+                            },
+                            pipeline: [{
+                                $match: {
+                                    $expr: {
+                                        $and: {
+                                            $eq: ["$$chapterId", "$chapter"],
+                                            $eq: [
+                                                "$voter",
+                                                mongoose.Types.ObjectId(req.verifiedUser._id),
+                                            ],
+                                        },
+                                    },
+                                },
+                            }, ],
+                            as: "voters",
+                        },
+                    },
+                    {
+                        $addFields: {
+                            voters: { $size: "$voters" },
+                        },
+                    },
+
+                    {
+                        $addFields: {
+                            reads: { $size: "$reads" },
+                            votes: { $size: "$votes" },
+                            comments: { $size: "$comments" },
+                            canVote: {
+                                $switch: {
+                                    branches: [
+                                        { case: { $ne: ["$voters", 0] }, then: false },
+                                        { case: { $eq: ["$voters", 0] }, then: true },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    { $unset: "voters" },
+                ] :
+                []),
         ]);
         return res.status(200).json(chap[0]);
     } catch (err) {
