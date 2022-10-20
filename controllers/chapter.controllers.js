@@ -39,7 +39,12 @@ const getChapter = async(req, res) => {
             await newRead.save();
         }
         const chap = await chapterModel.aggregate([
-            { $match: { _id: req.chapter._id } }
+            { $match: { _id: req.chapter._id } },
+            {
+                $lookup: {
+                    from: "Vote",
+                }
+            }
         ])
     } catch (err) {
         return res.status(500).json(err);
