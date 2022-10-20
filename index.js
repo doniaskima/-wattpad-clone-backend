@@ -26,7 +26,7 @@ const storyRoutes = require("./routes/story.routes");
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV === "development" ? "dev" : "combined"));
 app.use(helmet());
 app.use(compression());
 
