@@ -45,7 +45,8 @@ const getChapter = async(req, res) => {
                     from: "Vote",
                     localField: "_id",
                     foreignField: "chapter",
-                }
+                    as: "votes",
+                },
             }
         ])
     } catch (err) {
