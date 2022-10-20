@@ -47,7 +47,15 @@ const getChapter = async(req, res) => {
                     foreignField: "chapter",
                     as: "votes",
                 },
-            }
+            },
+            {
+                $lookup: {
+                    from: "Read",
+                    localField: "_id",
+                    foreignField: "chapter",
+                    as: "reads",
+                },
+            },
         ])
     } catch (err) {
         return res.status(500).json(err);

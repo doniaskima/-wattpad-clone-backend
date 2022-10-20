@@ -56,7 +56,7 @@ const getStory = async(req, res) => {
                         },
                         {
                             $lookup: {
-                                from: "Donia",
+                                from: "Read",
                                 localField: "_id",
                                 foreignField: "chapter",
                                 as: "reads",
