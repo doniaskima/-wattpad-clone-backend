@@ -11,7 +11,7 @@ const login = async(req, res) => {
         if (!validPassword)
             return res.status(403).json({ message: "Wrong email/password" });
 
-        const token = jwt.sign({ _id: userExist._id, isAdmin: userExist.isAdmin },
+        const token = jwt.sign({ _id: userExist._id, isAdmin: userExist.isAdmin, isEmailVerified: userExist.isEmailVerified },
             process.env.TOKEN_KEY, {
                 expiresIn: "2 days",
             }
@@ -42,5 +42,9 @@ const register = async(req, res) => {
         return res.status(500).json(err);
     }
 };
+
+const verifyEmail = async(req, res) => {
+
+}
 module.exports.login = login;
 module.exports.register = register;

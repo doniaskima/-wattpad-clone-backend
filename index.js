@@ -1,5 +1,4 @@
 // import section
-
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -15,7 +14,6 @@ mongoose.connection.on("connected", () => {
 mongoose.connection.on("error", (err) => {
     console.log("mongodb failed with", err);
 });
-
 
 //import routes
 const userRoutes = require("./routes/user.routes");
