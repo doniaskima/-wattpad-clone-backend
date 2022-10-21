@@ -44,7 +44,18 @@ const register = async(req, res) => {
 };
 
 const verifyEmail = async(req, res) => {
-
+    try {
+        if (!req.body.token) {
+            return res.status(403).json("no verification token");
+        }
+        const data = jwt.verify(req.body.token, process.env.TOKEN_KEY);
+        const user = await userModels.findById(data._id);
+        user.isEmailVerified = true;
+        await user.save();
+        return res.status(200).json("account verified");
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 }
 module.exports.login = login;
 module.exports.register = register;
