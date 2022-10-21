@@ -37,12 +37,12 @@ const register = async(req, res) => {
             password: hashedPassword,
         });
         const savedUser = await newUser.save();
-        const token = jwt.sign({ _id: userExist._id },
+        const token = jwt.sign({ _id: savedUser._id },
             process.env.TOKEN_KEY, {
                 expiresIn: "1h",
             }
         );
-        await transporter.sendMail()({
+        await transporter.sendMail({
             from: "wattpad@clone-wattpad.com",
             to: savedUser.email,
             subject: "verify email",
