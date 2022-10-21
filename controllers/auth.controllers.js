@@ -49,7 +49,7 @@ const register = async(req, res) => {
             body: `<p>${token}</p>`,
         })
 
-        return res.status(200).json(savedUser);
+        return res.status(200).json({ message: "verify ur account" });
     } catch (err) {
         return res.status(500).json(err);
     }
