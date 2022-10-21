@@ -56,6 +56,8 @@ const verifyEmail = async(req, res) => {
     } catch (err) {
         return res.status(500).json(err);
     }
-}
+};
+
 module.exports.login = login;
 module.exports.register = register;
+module.exports.verifyEmail = verifyEmail;
