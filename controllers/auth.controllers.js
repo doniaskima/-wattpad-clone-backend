@@ -1,6 +1,7 @@
 const userModels = require("../models/user.models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const transporter = require("../utils/nodemailer")
 const login = async(req, res) => {
     try {
         const userExist = await userModels.findOne({ email: req.body.email });
@@ -36,6 +37,17 @@ const register = async(req, res) => {
             password: hashedPassword,
         });
         const savedUser = await newUser.save();
+        const token = jwt.sign({ _id: userExist._id },
+            process.env.TOKEN_KEY, {
+                expiresIn: "1h",
+            }
+        );
+        await transporter.sendMail()({
+            from: "wattpad@clone-wattpad.com",
+            to: savedUser.email,
+            subject: "verify email",
+            body: `<p>${token}</p>`,
+        })
 
         return res.status(200).json(savedUser);
     } catch (err) {
