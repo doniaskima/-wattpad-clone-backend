@@ -34,6 +34,9 @@ app.use("/auth", authRoutes);
 app.use("/tags", tagRoutes);
 app.use("/stories", storyRoutes);
 
+app.get("/", (req, res) => {
+    return res.send({ message: "Welcome :))" });
+});
 //server listening
 const port = process.env.PORT || 8000;
 
